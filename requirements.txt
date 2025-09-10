@@ -1,0 +1,5 @@
+cryptography
+pyfiglet
+jinja2
+werkzeug
+flask
