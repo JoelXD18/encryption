@@ -14,7 +14,7 @@ async function procesar(accion) {
     formData.append("accion", accion);
 
     try {
-        // Cambiado: apunta a la función serverless en /api/archivo
+        // Apunta a la función serverless en /api/archivo
         const res = await fetch("/api/archivo", { method: "POST", body: formData });
         const data = await res.json();
 
@@ -38,8 +38,8 @@ Joel
             ascii.textContent = "";
         }
 
-        // Crear blob y descargar archivo
-        const bytes = new Uint8Array(data.filedata.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+        // Convertir Base64 a bytes y descargar
+        const bytes = Uint8Array.from(atob(data.filedata), c => c.charCodeAt(0));
         const blob = new Blob([bytes]);
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
