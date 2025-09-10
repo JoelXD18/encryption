@@ -1,22 +1,26 @@
 from flask import Flask, request, jsonify
 from cryptography.fernet import Fernet
-import base64, hashlib, pyfiglet
+import base64, hashlib
 
 app = Flask(__name__)
-FIRMA = "Joel"
+
+# Firma multilínea, escribe aquí lo que quieras, con saltos de línea reales
+FIRMA = """(^w^)
+/>
+¡Encriptado por Joel!
+Gracias por usar mi herramienta"""
 
 def generar_clave(password: str) -> bytes:
     return base64.urlsafe_b64encode(hashlib.sha256(password.encode()).digest())
 
-def generar_ascii_firma() -> bytes:
-    ascii_banner = pyfiglet.figlet_format(FIRMA)
-    return ascii_banner.encode() + b"\n--ENCRYPTED FILE START--\n"
+def generar_firma() -> bytes:
+    return (FIRMA + "\n--ENCRYPTED FILE START--\n").encode()
 
 def encriptar_archivo(file_bytes, filename, password):
     clave = generar_clave(password)
     fernet = Fernet(clave)
     datos_encriptados = fernet.encrypt(file_bytes)
-    datos_finales = f"FILENAME:{filename}\n".encode() + generar_ascii_firma() + datos_encriptados
+    datos_finales = f"FILENAME:{filename}\n".encode() + generar_firma() + datos_encriptados
     return datos_finales
 
 def desencriptar_archivo(file_bytes, password):
