@@ -33,7 +33,7 @@ def desencriptar_archivo(file_bytes, password):
         return None, str(e)
     return datos_originales, nombre_original
 
-@app.route("/procesar", methods=["POST"])
+@app.route("/api/archivo", methods=["POST"])
 def procesar():
     archivo = request.files.get("archivo")
     password = request.form.get("password")
@@ -49,7 +49,7 @@ def procesar():
         resultado = encriptar_archivo(file_bytes, filename, password)
         return jsonify({
             "filename": filename + ".enc",
-            "filedata": resultado.hex()
+            "filedata": base64.b64encode(resultado).decode()
         })
     elif accion == "desencriptar":
         datos_originales, nombre = desencriptar_archivo(file_bytes, password)
@@ -57,7 +57,7 @@ def procesar():
             return jsonify({"error": nombre}), 400
         return jsonify({
             "filename": "DEC_" + nombre,
-            "filedata": datos_originales.hex()
+            "filedata": base64.b64encode(datos_originales).decode()
         })
     else:
         return jsonify({"error": "Acción desconocida"}), 400
