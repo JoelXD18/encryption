@@ -1,5 +1,5 @@
 cryptography
 pyfiglet
+flask
 jinja2
 werkzeug
-flask
